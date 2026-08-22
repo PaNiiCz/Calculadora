@@ -1,20 +1,38 @@
-echo "# Arquivos do Python" > .gitignore
-echo "__pycache__/" >> .gitignore
-echo "*.pyc" >> .gitignore
-echo ".venv/" >> .gitignore
-echo "venv/" >> .gitignore
-echo "env/" >> .gitignore
-echo "" >> .gitignore
-echo "# Arquivos do PyInstaller" >> .gitignore
-echo "build/" >> .gitignore
-echo "dist/" >> .gitignore
-echo "*.spec" >> .gitignore
-echo "" >> .gitignore
-echo "# IDE" >> .gitignore
-echo ".vscode/" >> .gitignore
-echo ".idea/" >> .gitignore
-echo "" >> .gitignore
-echo "# Outros" >> .gitignore
-echo "*.log" >> .gitignore
-echo "*.ico" >> .gitignore
-echo "converter_icone.py" >> .gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.dll
+*.dylib
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+ENV/
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Ícones
+*.ico
+*.png
+*.jpg
+*.jpeg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Outros
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
