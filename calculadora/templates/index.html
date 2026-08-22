@@ -1,88 +1,94 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-    <div class="overlay" id="overlay" onclick="fecharMenu()"></div>
-
-    <nav class="menu-lateral" id="menuLateral">
-        <div class="menu-secao-titulo">Calculadora</div>
-        <div class="menu-item ativo" onclick="selecionarModo(this, 'padrao')">🧮 <span>Padrão</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'cientifica')">🧪 <span>Científica</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'grafica')">📈 <span>Representação gráfica</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'programador')">💻 <span>Programador</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'data')">📅 <span>Cálculo de data</span></div>
-
-        <div class="menu-secao-titulo">Conversor</div>
-        <div class="menu-item" onclick="selecionarModo(this, 'moeda')">💱 <span>Moeda</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'volume')">📦 <span>Volume</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'comprimento')">📏 <span>Comprimento</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'peso')">⚖️ <span>Peso e massa</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'temperatura')">🌡️ <span>Temperatura</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'energia')">🔋 <span>Energia</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'area')">▦ <span>Área</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'velocidade')">🏃 <span>Velocidade</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'tempo')">⏱️ <span>Tempo</span></div>
-        <div class="menu-item" onclick="selecionarModo(this, 'potencia')">⚡ <span>Potência</span></div>
-    </nav>
-
-    <div id="toast"></div>
-
-    <div class="calculadora" id="calculadora">
-        <div class="topo">
-            <span class="menu" onclick="abrirMenu()">☰</span>
-            <span class="tema-icone" id="temaIcone" onclick="alternarTema()">🌙</span>
-            <span class="fechar" onclick="fecharApp()">✕</span>
-        </div>
-
-    <div class="visor-area">
-        <div class="historico-container">
-            <div id="historicoLista"></div>
-            <div id="historico"></div>
-        </div>
-        <input type="text" id="visor" disabled>
+    <!-- MENU LATERAL (Escondido) -->
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li>📟 Calculadora Padrão</li>
+            <li>📐 Científica</li>
+            <li>📈 Representação gráfica</li>
+            <li>💻 Programador</li>
+            <li>📅 Cálculo de data</li>
+            <li>💱 Conversor de Moeda</li>
+            <li>🧊 Volume</li>
+            <li>📏 Comprimento</li>
+            <li>⚖️ Peso e massa</li>
+            <li>🌡️ Temperatura</li>
+            <li>⚡ Energia</li>
+            <li>🗺️ Área</li>
+            <li>🏃 Velocidade</li>
+            <li>⏱️ Tempo</li>
+            <li>💡 Potência</li>
+        </ul>
     </div>
 
-        <div class="botoes">
-        <!-- Linha 1: Memória -->
-        <button onclick="memoriaMC()" class="funcao" style="font-size:12px">MC</button>
-        <button onclick="memoriaMR()" class="funcao" style="font-size:12px">MR</button>
-        <button onclick="memoriaMmais()" class="funcao" style="font-size:12px">M+</button>
-        <button onclick="memoriaMmenos()" class="funcao" style="font-size:12px">M−</button>
+    <!-- ÁREA DA CALCULADORA -->
+    <div class="calculator-area">
+        <div class="calculator-container">
 
-        <!-- Linha 2: Limpeza -->
-        <button onclick="limpar()" class="funcao">CE</button>
-        <button onclick="limparTudo()" class="funcao">C</button>
-        <button onclick="apagar()" class="funcao">DEL</button>
-        <button onclick="adicionar('/')" class="funcao">÷</button>
+            <!-- Cabeçalho: Pontinhos à esquerda, Controles à direita -->
+            <div class="window-header">
+                
+                <!-- Pontinhos (Clique para abrir menu) -->
+                <div class="dots-group" onclick="toggleSidebar()">
+                    <div class="window-dot dot-red"></div>
+                    <div class="window-dot dot-yellow"></div>
+                    <div class="window-dot dot-green"></div>
+                </div>
 
-        <!-- Linha 3: Números + operadores -->
-        <button onclick="adicionar('7')">7</button>
-        <button onclick="adicionar('8')">8</button>
-        <button onclick="adicionar('9')">9</button>
-        <button onclick="adicionar('*')" class="funcao">×</button>
+                <!-- Controles da Janela (Minimizar, Maximizar, Fechar) -->
+                <div class="window-controls">
+                    <button class="control-btn" onclick="minimizeWindow()">—</button>
+                    <button class="control-btn" onclick="maximizeWindow()">□</button>
+                    <button class="control-btn" onclick="closeWindow()">✕</button>
+                </div>
 
-        <!-- Linha 4 -->
-        <button onclick="adicionar('4')">4</button>
-        <button onclick="adicionar('5')">5</button>
-        <button onclick="adicionar('6')">6</button>
-        <button onclick="adicionar('-')" class="funcao">−</button>
+            </div>
 
-        <!-- Linha 5 -->
-        <button onclick="adicionar('1')">1</button>
-        <button onclick="adicionar('2')">2</button>
-        <button onclick="adicionar('3')">3</button>
-        <button onclick="adicionar('+')" class="funcao">+</button>
+            <!-- Display -->
+            <div class="display" id="display">0</div>
 
-        <!-- Linha 6: Última linha com % -->
-        <button onclick="adicionar('%')" class="funcao">%</button>
-        <button onclick="adicionar('0')">0</button>
-        <button onclick="adicionar('.')">.</button>
-        <button onclick="calcular()" class="igual">=</button>
+            <!-- Botões -->
+            <div class="buttons-grid">
+                <button class="btn" onclick="appendToDisplay('MC')">MC</button>
+                <button class="btn" onclick="appendToDisplay('MR')">MR</button>
+                <button class="btn" onclick="appendToDisplay('M+')">M+</button>
+                <button class="btn" onclick="appendToDisplay('M-')">M-</button>
+
+                <button class="btn" onclick="clearDisplay()">CE</button>
+                <button class="btn" onclick="clearDisplay()">C</button>
+                <button class="btn" onclick="deleteLast()">DEL</button>
+                <button class="btn btn-operator" onclick="appendToDisplay('/')">÷</button>
+
+                <button class="btn" onclick="appendToDisplay('7')">7</button>
+                <button class="btn" onclick="appendToDisplay('8')">8</button>
+                <button class="btn" onclick="appendToDisplay('9')">9</button>
+                <button class="btn btn-operator" onclick="appendToDisplay('*')">×</button>
+
+                <button class="btn" onclick="appendToDisplay('4')">4</button>
+                <button class="btn" onclick="appendToDisplay('5')">5</button>
+                <button class="btn" onclick="appendToDisplay('6')">6</button>
+                <button class="btn btn-operator" onclick="appendToDisplay('-')">-</button>
+
+                <button class="btn" onclick="appendToDisplay('1')">1</button>
+                <button class="btn" onclick="appendToDisplay('2')">2</button>
+                <button class="btn" onclick="appendToDisplay('3')">3</button>
+                <button class="btn btn-operator" onclick="appendToDisplay('+')">+</button>
+
+                <button class="btn" onclick="appendToDisplay('%')">%</button>
+                <button class="btn" onclick="appendToDisplay('0')">0</button>
+                <button class="btn" onclick="appendToDisplay('.')">.</button>
+                <button class="btn btn-equals" onclick="calculateResult()">=</button>
+            </div>
+
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>

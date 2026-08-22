@@ -1,150 +1,95 @@
-const visor = document.getElementById('visor');
-const historico = document.getElementById('historico');
+// --- FUNÇÕES DA CALCULADORA ---
+let display = document.getElementById('display');
 
-function adicionar(valor) {
-    visor.value += valor;
+function appendToDisplay(value) {
+    display.innerText = display.innerText === '0' ? value : display.innerText + value;
 }
 
-function limpar() {
-    visor.value = '';
-    historico.textContent = '';
+function clearDisplay() {
+    display.innerText = '0';
 }
 
-function apagar() {
-    visor.value = visor.value.slice(0, -1);
+function deleteLast() {
+    display.innerText = display.innerText.slice(0, -1) || '0';
 }
 
-function inverterSinal() {
-    if (visor.value.startsWith('-')) {
-        visor.value = visor.value.slice(1);
-    } else if (visor.value.length > 0) {
-        visor.value = '-' + visor.value;
+function calculateResult() {
+    try {
+        display.innerText = eval(display.innerText);
+    } catch {
+        display.innerText = 'Erro';
     }
 }
 
-function calcular() {
-    const expressaoOriginal = visor.value;
-
-    fetch('/calcular', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ expressao: expressaoOriginal })
-    })
-    .then(resposta => resposta.json())
-    .then(dados => {
-        if (dados.erro) {
-            visor.value = 'Erro';
-        } else {
-            historico.textContent = expressaoOriginal;
-            visor.value = dados.resultado;
-        }
-    })
-    .catch(() => {
-        visor.value = 'Erro';
-    });
+// --- FUNÇÕES DO MENU ---
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
 }
 
-function alternarTema() {
-    document.body.classList.toggle('claro');
-    const modoClaro = document.body.classList.contains('claro');
-    localStorage.setItem('temaClaro', modoClaro);
-    atualizarIconeTema();
-}
-
-function atualizarIconeTema() {
-    const icone = document.getElementById('temaIcone');
-    const modoClaro = document.body.classList.contains('claro');
-    icone.textContent = modoClaro ? '☀️' : '🌙';
-}
-
-// ao carregar a página, aplica o tema que a pessoa escolheu da última vez
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('temaClaro') === 'true') {
-        document.body.classList.add('claro');
+// Fecha o menu se clicar fora dele
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const header = document.querySelector('.window-header');
+    
+    if (!sidebar.contains(event.target) && !header.contains(event.target)) {
+        sidebar.classList.remove('active');
     }
-    atualizarIconeTema();
 });
 
-function fecharApp() {
-    // só funciona dentro do app desktop (pywebview); no navegador comum, não faz nada
+// --- FUNÇÕES DA JANELA (via pywebview) ---
+function closeWindow() {
     if (window.pywebview) {
-        window.pywebview.api.fechar();
-    }
-}
-
-function abrirMenu() {
-    document.getElementById('menuLateral').classList.add('aberto');
-    document.getElementById('overlay').classList.add('aberto');
-}
-
-function limparTudo() {
-    visor.value = '';
-    historico.textContent = '';
-    historicoArray = [];
-    atualizarHistorico();
-}
-
-function fecharMenu() {
-    document.getElementById('menuLateral').classList.remove('aberto');
-    document.getElementById('overlay').classList.remove('aberto');
-}
-
-function selecionarModo(elemento, modo) {
-    if (modo !== 'padrao') {
-        mostrarToast('Disponível em breve 🚧');
-        fecharMenu();
-        return;
-    }
-
-    document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('ativo'));
-    elemento.classList.add('ativo');
-    fecharMenu();
-}
-
-function mostrarToast(mensagem) {
-    const toast = document.getElementById('toast');
-    toast.textContent = mensagem;
-    toast.classList.add('mostrar');
-    setTimeout(() => {
-        toast.classList.remove('mostrar');
-    }, 1800);
-}
-
-// ===== MEMÓRIA =====
-let memoria = 0;
-let memoriaAtiva = false;
-
-function memoriaMC() {
-    memoria = 0;
-    memoriaAtiva = false;
-    mostrarToast('Memória limpa');
-}
-
-function memoriaMR() {
-    if (memoriaAtiva) {
-        visor.value = memoria.toString();
-        mostrarToast('MR: ' + memoria);
+        window.pywebview.api.close_window();
     } else {
-        mostrarToast('Memória vazia');
+        window.close();
     }
 }
 
-function memoriaMmais() {
-    const valor = parseFloat(visor.value);
-    if (!isNaN(valor)) {
-        memoria += valor;
-        memoriaAtiva = true;
-        mostrarToast('M+ : ' + memoria);
-        limpar();
+function minimizeWindow() {
+    if (window.pywebview) {
+        window.pywebview.api.minimize_window();
     }
 }
 
-function memoriaMmenos() {
-    const valor = parseFloat(visor.value);
-    if (!isNaN(valor)) {
-        memoria -= valor;
-        memoriaAtiva = true;
-        mostrarToast('M− : ' + memoria);
-        limpar();
+function maximizeWindow() {
+    if (window.pywebview) {
+        window.pywebview.api.maximize_window();
     }
 }
+
+// --- FUNÇÕES DO TECLADO FÍSICO ---
+document.addEventListener('keydown', function(event) {
+    const key = event.key;
+
+    // Se for um número (0-9) ou um ponto (.)
+    if (key >= '0' && key <= '9' || key === '.') {
+        appendToDisplay(key);
+    }
+    // Se for um operador (+, -, *, /)
+    else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        // O eval() entende '*' como multiplicação, mas o usuário digita 'x' ou '*'
+        // Para ficar igual aos botões, vamos converter '*' para '*' (o próprio)
+        appendToDisplay(key);
+    }
+    // Se apertar Enter ou '=' (no teclado numérico)
+    else if (key === 'Enter' || key === '=') {
+        event.preventDefault(); // Evita que o Enter recarregue a página
+        calculateResult();
+    }
+    // Se apertar Backspace (apagar)
+    else if (key === 'Backspace') {
+        deleteLast();
+    }
+    // Se apertar Escape (limpar tudo)
+    else if (key === 'Escape') {
+        clearDisplay();
+    }
+    // Se apertar 'c' ou 'C' (limpar)
+    else if (key === 'c' || key === 'C') {
+        clearDisplay();
+    }
+    // Se apertar '%' (porcentagem)
+    else if (key === '%') {
+        appendToDisplay('%');
+    }
+});

@@ -1,0 +1,1 @@
+from PIL import Image; img = Image.open('icons8-calculator-96.png').convert("RGBA"); img.save('icone.ico', format='ICO', sizes=[(256, 256), (64, 64), (48, 48), (32, 32), (16, 16)]); print("Pronto, ícone atualizado!")

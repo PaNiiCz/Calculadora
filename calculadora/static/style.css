@@ -1,353 +1,175 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
-}
-
-:root {
-    --fundo-pagina: #1a1a1a;
-    --topo-cor: linear-gradient(135deg, #d24c4b, #7a2b2b);
-    --corpo-cor: #1e202a;
-    --texto-visor: #ffffff;
-    --texto-historico: #d8b9b8;
-    --botao-numero-cor: #ffffff;
-    --botao-numero-fundo: transparent;
-    --botao-funcao-cor: #d24c4b;
-    --botao-igual-fundo: #d24c4b;
-    --botao-igual-cor: #ffffff;
-    --linha-divisoria: #3a3d4a;
-}
-
-body.claro {
-    --corpo-cor: #ffffff;
-    --texto-visor: #1e202a;
-    --texto-historico: #b0b0b0;
-    --botao-numero-cor: #1e202a;
-    --linha-divisoria: #e0e0e0;
-}
-
-html, body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-}
-
-.calculadora {
-    width: 300px;
-    border-radius: 0;
+    background-color: #0f172a;
+    color: #fff;
+    height: 100vh;
+    width: 100vw;
     overflow: hidden;
-}
-
-.topo {
-    background: var(--topo-cor);
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
+    display: flex; /* Isso centraliza a calculadora automaticamente */
+    justify-content: center;
     align-items: center;
-    color: #fff;
-    font-size: 20px;
-    -webkit-app-region: drag;
 }
 
-.tema-icone, .fechar, .menu {
-    -webkit-app-region: no-drag;
-}
-
-.fechar {
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.fechar:hover {
-    opacity: 0.7;
-}
-
-.tema-icone {
-    cursor: pointer;
-    font-size: 18px;
-    transition: transform 0.3s ease;
-}
-
-.tema-icone:active {
-    transform: scale(0.8) rotate(20deg);
-}
-
-.visor-area {
-    background: var(--topo-cor);
-    padding: 0 20px 20px 20px;
-}
-
-#historico {
-    color: var(--texto-historico);
-    font-size: 13px;
-    text-align: right;
-    min-height: 16px;
-}
-
-#visor {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: #fff;
-    text-align: right;
-    font-size: 40px;
-    margin-top: 5px;
-}
-
-.botoes {
-    background: var(--corpo-cor);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    padding: 15px;
-    gap: 8px;
-}
-
-button {
-    height: 55px;
-    border: none;
-    background: var(--botao-numero-fundo);
-    color: var(--botao-numero-cor);
-    font-size: 20px;
-    border-bottom: 1px solid var(--linha-divisoria);
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button:hover {
-    opacity: 0.7;
-}
-
-.funcao {
-    color: var(--botao-funcao-cor) !important;
-}
-
-.igual {
-    background: var(--botao-igual-fundo) !important;
-    color: var(--botao-igual-cor) !important;
-    border-radius: 0px;
-}
-
-html, body {
-    background: transparent;
-}
-
-.calculadora {
-    position: relative;
-    z-index: 1;
-}
-
-/* Menu lateral */
-.menu-lateral {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 230px;
-    background: var(--corpo-cor);
-    color: var(--botao-numero-cor);
-    z-index: 10;
+/* Menu Lateral (Escondido por padrão) */
+.sidebar {
+    width: 250px;
+    background-color: #1e293b;
+    padding: 20px;
+    border-right: 1px solid #334155;
     transform: translateX(-100%);
-    transition: transform 0.28s ease;
-    overflow-y: auto;
-    padding: 15px 0;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
 }
 
-.menu-lateral.aberto {
+.sidebar.active {
     transform: translateX(0);
 }
 
-.menu-secao-titulo {
-    font-size: 12px;
-    text-transform: uppercase;
-    opacity: 0.5;
-    padding: 15px 18px 8px 18px;
+.sidebar ul {
+    list-style: none;
 }
 
-.menu-item {
-    padding: 10px 18px;
+.sidebar li {
+    margin-bottom: 15px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.15s ease, transform 0.1s ease;
-    border-radius: 6px;
-    margin: 0 6px;
+    gap: 10px;
+    font-size: 15px;
 }
 
-.menu-item:hover {
-    background: rgba(210, 76, 75, 0.15);
-}
-
-.menu-item:active {
-    transform: scale(0.97);
-}
-
-.menu-item.ativo {
-    background: rgba(210, 76, 75, 0.25);
-    border-left: 3px solid #d24c4b;
-}
-
-/* Fundo escurecido atrás do menu */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
+/* Área da Calculadora (ocupa o centro) */
+.calculator-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.4);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.28s ease;
-    z-index: 5;
+    padding: 15px; /* Pequena margem para não colar nas bordas */
 }
 
-.overlay.aberto {
-    opacity: 1;
-    pointer-events: auto;
+/* A janela da calculadora */
+.calculator-container {
+    background-color: #1e293b;
+    border-radius: 15px;
+    border: 1px solid #334155;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    width: 100%;       /* <--- MUDANÇA: Ocupa 100% da largura disponível */
+    max-width: 450px;  /* <--- MUDANÇA: Limite máximo para não esticar demais */
+    height: 100%;      /* <--- MUDANÇA: Ocupa 100% da altura disponível */
+    max-height: 700px; /* <--- MUDANÇA: Limite máximo de altura */
+    
+    /* Se você QUISER que ela fique 100% colada nas bordas quando maximizar, 
+       mude max-width e max-height para "none" */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Aviso "Em breve" */
-#toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: #d24c4b;
+/* Cabeçalho com os controles */
+.window-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.dots-group {
+    display: flex;
+    gap: 8px;
+}
+
+.window-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot-red { background-color: #ff5f57; }
+.dot-yellow { background-color: #febc2e; }
+.dot-green { background-color: #28c840; }
+
+/* Botões de controle */
+.window-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.control-btn:hover {
     color: #fff;
-    padding: 10px 18px;
-    border-radius: 20px;
-    font-size: 13px;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.25s ease;
-    z-index: 20;
 }
 
-#toast.mostrar {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-.historico-container {
-    max-height: 80px;
-    overflow-y: auto;
+/* Display */
+.display {
+    background-color: #0f172a;
+    color: #fff;
+    font-size: 2.5rem;
     text-align: right;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    min-height: 60px;
+    border: 1px solid #334155;
+    flex-shrink: 0; /* Impede que o display seja espremido */
 }
 
-#historicoLista {
-    color: var(--texto-historico);
-    font-size: 12px;
-    opacity: 0.7;
-    line-height: 1.4;
-    margin-bottom: 4px;
+/* Grid de Botões */
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    flex-grow: 1; /* Faz os botões crescerem para preencher a tela */
 }
 
-#historicoLista .item-historico {
-    display: block;
-    padding: 2px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+.btn {
+    background-color: #334155;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-/* Scroll personalizado para o histórico */
-.historico-container::-webkit-scrollbar {
-    width: 4px;
+.btn:hover {
+    background-color: #475569;
 }
 
-.historico-container::-webkit-scrollbar-track {
-    background: transparent;
+.btn-operator {
+    background-color: #475569;
 }
 
-.historico-container::-webkit-scrollbar-thumb {
-    background: rgba(210, 76, 75, 0.5);
-    border-radius: 2px;
+.btn-equals {
+    background-color: #3b82f6;
 }
 
-/* Botões de memória - um pouco menores */
-.botoes button[onclick*="memoria"] {
-    font-size: 13px !important;
-    letter-spacing: 0.5px;
+.window-header {
+    /* ... mantém o que já tem ... */
+    -webkit-app-region: drag; /* Isso permite arrastar a janela pelo cabeçalho */
 }
 
-/* ===== ESTILO DE APP NATIVO ===== */
-body {
-    background: var(--corpo-cor);
-}
-
-.calculadora {
-    width: 100%;
-    height: 100vh;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-/* Melhorar a aparência dos botões para parecer app nativo */
-button {
-    border-radius: 4px;
-    transition: all 0.15s ease;
-    font-weight: 500;
-}
-
-button:hover {
-    background: rgba(255, 255, 255, 0.05);
-    transform: scale(0.98);
-}
-
-button:active {
-    transform: scale(0.95);
-    opacity: 0.7;
-}
-
-/* Botão igual com destaque */
-.igual {
-    background: var(--botao-igual-fundo) !important;
-    color: var(--botao-igual-cor) !important;
-    border-radius: 4px !important;
-    font-weight: bold;
-    font-size: 24px;
-}
-
-.igual:hover {
-    opacity: 0.9;
-    transform: scale(0.98);
-}
-
-/* Botões de memória com estilo diferenciado */
-.botoes button[onclick*="memoria"] {
-    font-size: 11px !important;
-    font-weight: bold;
-    opacity: 0.8;
-    letter-spacing: 0.5px;
-}
-
-/* Visor mais parecido com app */
-#visor {
-    font-size: 48px;
-    font-weight: 300;
-    padding: 5px 0;
-    letter-spacing: 1px;
-}
-
-/* Histórico mais integrado */
-#historico {
-    font-size: 14px;
-    opacity: 0.7;
-    min-height: 20px;
-}
-
-/* Ajuste para o modo claro */
-body.claro button:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-body.claro .botoes {
-    border-top: 1px solid #e0e0e0;
+.dots-group, .window-controls {
+    -webkit-app-region: no-drag; 
 }

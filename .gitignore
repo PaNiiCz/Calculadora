@@ -36,3 +36,6 @@ dist/
 *.tmp
 .DS_Store
 Thumbs.db
+
+# Exceção para o ícone do projeto
+!static/icone.ico
