@@ -65,13 +65,10 @@ body {
     border: 1px solid #334155;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     padding: 20px;
-    width: 100%;       /* <--- MUDANÇA: Ocupa 100% da largura disponível */
-    max-width: 450px;  /* <--- MUDANÇA: Limite máximo para não esticar demais */
-    height: 100%;      /* <--- MUDANÇA: Ocupa 100% da altura disponível */
-    max-height: 700px; /* <--- MUDANÇA: Limite máximo de altura */
-    
-    /* Se você QUISER que ela fique 100% colada nas bordas quando maximizar, 
-       mude max-width e max-height para "none" */
+    width: 100%;
+    max-width: 450px;
+    height: 100%;
+    max-height: none;
     display: flex;
     flex-direction: column;
 }
@@ -83,6 +80,11 @@ body {
     align-items: center;
     margin-bottom: 20px;
     cursor: pointer;
+    -webkit-app-region: drag; /* Permite arrastar a janela pelo cabeçalho */
+}
+
+.dots-group, .window-controls {
+    -webkit-app-region: no-drag;
 }
 
 .dots-group {
@@ -148,7 +150,7 @@ body {
     border: none;
     border-radius: 10px;
     font-size: 1.2rem;
-    padding: 15px;
+    padding: 12px;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -165,11 +167,20 @@ body {
     background-color: #3b82f6;
 }
 
-.window-header {
-    /* ... mantém o que já tem ... */
-    -webkit-app-region: drag; /* Isso permite arrastar a janela pelo cabeçalho */
+/* Grade científica: escondida por padrão */
+.scientific-grid {
+    display: none;
+    margin-top: 10px;
+    flex-grow: 0;
+    gap: 6px;
 }
 
-.dots-group, .window-controls {
-    -webkit-app-region: no-drag; 
+.scientific-grid .btn {
+    padding: 10px;
+    font-size: 1rem;
+}
+
+/* Aparece quando o container tem a classe modo-cientifica */
+.calculator-container.modo-cientifica .scientific-grid {
+    display: grid;
 }

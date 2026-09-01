@@ -15,10 +15,30 @@ function deleteLast() {
 
 function calculateResult() {
     try {
-        display.innerText = eval(display.innerText);
+        let expressao = display.innerText
+            .replace(/\^/g, '**')
+            .replace(/√/g, 'sqrt');
+        display.innerText = eval(expressao);
     } catch {
         display.innerText = 'Erro';
     }
+}
+
+// --- FUNÇÕES CIENTÍFICAS ---
+function sin(x) { return Math.sin(x * Math.PI / 180); }
+function cos(x) { return Math.cos(x * Math.PI / 180); }
+function tan(x) { return Math.tan(x * Math.PI / 180); }
+function log(x) { return Math.log10(x); }
+function ln(x) { return Math.log(x); }
+function sqrt(x) { return Math.sqrt(x); }
+
+function factorial(n) {
+    n = Math.round(n);
+    if (n < 0) return NaN;
+    if (n <= 1) return 1;
+    let resultado = 1;
+    for (let i = 2; i <= n; i++) resultado *= i;
+    return resultado;
 }
 
 // --- FUNÇÕES DO MENU ---
@@ -26,11 +46,25 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('active');
 }
 
+function switchMode(modo) {
+    const container = document.querySelector('.calculator-container');
+    if (modo === 'cientifica') {
+        container.classList.add('modo-cientifica');
+    } else {
+        container.classList.remove('modo-cientifica');
+    }
+    document.getElementById('sidebar').classList.remove('active');
+
+    // Pede pro Python redimensionar a janela nativa de verdade
+    if (window.pywebview) {
+        window.pywebview.api.resize_window(modo);
+    }
+}
+
 // Fecha o menu se clicar fora dele
 document.addEventListener('click', function(event) {
     const sidebar = document.getElementById('sidebar');
     const header = document.querySelector('.window-header');
-    
     if (!sidebar.contains(event.target) && !header.contains(event.target)) {
         sidebar.classList.remove('active');
     }
@@ -61,34 +95,25 @@ function maximizeWindow() {
 document.addEventListener('keydown', function(event) {
     const key = event.key;
 
-    // Se for um número (0-9) ou um ponto (.)
     if (key >= '0' && key <= '9' || key === '.') {
         appendToDisplay(key);
     }
-    // Se for um operador (+, -, *, /)
     else if (key === '+' || key === '-' || key === '*' || key === '/') {
-        // O eval() entende '*' como multiplicação, mas o usuário digita 'x' ou '*'
-        // Para ficar igual aos botões, vamos converter '*' para '*' (o próprio)
         appendToDisplay(key);
     }
-    // Se apertar Enter ou '=' (no teclado numérico)
     else if (key === 'Enter' || key === '=') {
-        event.preventDefault(); // Evita que o Enter recarregue a página
+        event.preventDefault();
         calculateResult();
     }
-    // Se apertar Backspace (apagar)
     else if (key === 'Backspace') {
         deleteLast();
     }
-    // Se apertar Escape (limpar tudo)
     else if (key === 'Escape') {
         clearDisplay();
     }
-    // Se apertar 'c' ou 'C' (limpar)
     else if (key === 'c' || key === 'C') {
         clearDisplay();
     }
-    // Se apertar '%' (porcentagem)
     else if (key === '%') {
         appendToDisplay('%');
     }

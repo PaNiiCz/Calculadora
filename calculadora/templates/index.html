@@ -11,8 +11,8 @@
     <!-- MENU LATERAL (Escondido) -->
     <div class="sidebar" id="sidebar">
         <ul>
-            <li>📟 Calculadora Padrão</li>
-            <li>📐 Científica</li>
+            <li onclick="switchMode('padrao')">📟 Calculadora Padrão</li>
+            <li onclick="switchMode('cientifica')">📐 Científica</li>
             <li>📈 Representação gráfica</li>
             <li>💻 Programador</li>
             <li>📅 Cálculo de data</li>
@@ -35,27 +35,42 @@
 
             <!-- Cabeçalho: Pontinhos à esquerda, Controles à direita -->
             <div class="window-header">
-                
-                <!-- Pontinhos (Clique para abrir menu) -->
                 <div class="dots-group" onclick="toggleSidebar()">
                     <div class="window-dot dot-red"></div>
                     <div class="window-dot dot-yellow"></div>
                     <div class="window-dot dot-green"></div>
                 </div>
-
-                <!-- Controles da Janela (Minimizar, Maximizar, Fechar) -->
                 <div class="window-controls">
                     <button class="control-btn" onclick="minimizeWindow()">—</button>
                     <button class="control-btn" onclick="maximizeWindow()">□</button>
                     <button class="control-btn" onclick="closeWindow()">✕</button>
                 </div>
-
             </div>
 
             <!-- Display -->
             <div class="display" id="display">0</div>
 
-            <!-- Botões -->
+            <!-- Botões científicos (aparecem só no modo científica, ACIMA dos números) -->
+            <div class="buttons-grid scientific-grid" id="scientific-grid">
+                <button class="btn" onclick="appendToDisplay('sin(')">sin</button>
+                <button class="btn" onclick="appendToDisplay('cos(')">cos</button>
+                <button class="btn" onclick="appendToDisplay('tan(')">tan</button>
+                <button class="btn" onclick="appendToDisplay('log(')">log</button>
+
+                <button class="btn" onclick="appendToDisplay('ln(')">ln</button>
+                <button class="btn" onclick="appendToDisplay('√(')">√</button>
+                <button class="btn" onclick="appendToDisplay('^2')">x²</button>
+                <button class="btn" onclick="appendToDisplay('^')">xʸ</button>
+
+                <button class="btn" onclick="appendToDisplay('factorial(')">n!</button>
+                <button class="btn" onclick="appendToDisplay(Math.PI.toString())">π</button>
+                <button class="btn" onclick="appendToDisplay(Math.E.toString())">e</button>
+                <button class="btn" onclick="appendToDisplay('(')">(</button>
+
+                <button class="btn" onclick="appendToDisplay(')')">)</button>
+            </div>
+
+            <!-- Botões normais -->
             <div class="buttons-grid">
                 <button class="btn" onclick="appendToDisplay('MC')">MC</button>
                 <button class="btn" onclick="appendToDisplay('MR')">MR</button>

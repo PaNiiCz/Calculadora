@@ -5,12 +5,18 @@ from app import app
 class Api:
     def close_window(self):
         webview.windows[0].destroy()
-    
+
     def minimize_window(self):
         webview.windows[0].minimize()
-    
+
     def maximize_window(self):
         webview.windows[0].toggle_fullscreen()
+
+    def resize_window(self, modo):
+        if modo == 'cientifica':
+            webview.windows[0].resize(420, 820)
+        else:
+            webview.windows[0].resize(420, 650)
 
 if __name__ == '__main__':
     def start_flask():
@@ -24,12 +30,12 @@ if __name__ == '__main__':
         'Calculadora',
         'http://127.0.0.1:5001',
         js_api=Api(),
-        width=450,
-        height=700,
-        min_size=(400, 600),
-        resizable=True,     # Continua podendo redimensionar (mas sem a setinha)
-        frameless=True,     # Continua sem a barra padrão
-        easy_drag=True      # <--- VOLTOU ISSO! Permite arrastar a janela em qualquer lugar
+        width=420,
+        height=650,
+        min_size=(380, 500),
+        resizable=True,
+        frameless=True,
+        easy_drag=True
     )
-    
+
     webview.start()
